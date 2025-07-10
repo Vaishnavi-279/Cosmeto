@@ -1,0 +1,59 @@
+package Cosmeto;
+
+import Products.ProductsList;
+import java.util.*;
+import java.io.*;
+
+class OutOfRange extends Exception {
+}
+
+//interface Bill {
+//	public void Bill();
+//}
+
+public class Cosmeto{
+	Scanner sc;
+	public static int cnt = 0;
+	FileReader fr;
+	BufferedReader br;
+
+	public static void main(String args[]) throws IOException {
+          	System.out.println("Welcome to Cosmetic Store!");
+		try{
+          		FileReader fr = new FileReader("Brands.txt");
+	        		BufferedReader br = new BufferedReader(fr);
+       			System.out.println("Select one brand from the following...");
+        			String line;
+	        		while ((line = br.readLine()) != null) {
+          	  		System.out.println(line);
+            			cnt++;
+        			}
+        			br.close();
+			fr.close();
+			brandSelection(cnt);
+		}
+		catch (IOException e) {
+            		System.out.println("Please enter a valid choice...");
+        		}
+		finally{
+            		System.out.println("Thank you for visiting :)");
+        		}
+	}
+
+	public static void brandSelection(int cnt){
+        		System.out.println("Enter the number corresponding to your choice:");
+		Scanner sc = new Scanner(System.in);
+       		int choice = sc.nextInt();
+        		try {
+            		if (choice < 1 || choice > cnt) {
+                			throw new OutOfRange();
+            		}
+			else{
+				ProductsList productList = new ProductsList(choice);
+                		}
+        		}
+		catch (OutOfRange e) {
+            		System.out.println("Please enter a valid choice...");
+        		}
+	}
+}

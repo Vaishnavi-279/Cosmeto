@@ -1,0 +1,16 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+
+public class BillHandler {
+    public static void printBill(String choices, int totalBill, List<String> chosenProducts) {
+        try (FileWriter writer = new FileWriter("Bill.txt", true)) {
+            writer.write("\nUser Choices:\n" + choices + "\n\nTotal Bill: " + totalBill + "\n\nAll Chosen Products:\n");
+            for (String chosenProduct : chosenProducts) {
+                writer.write(chosenProduct + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

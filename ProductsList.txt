@@ -1,0 +1,141 @@
+package Products;
+
+import Cosmeto.Cosmeto;
+import java.io.*;
+import java.util.*;
+import java.nio.*;
+
+interface Bill {
+	public void receipt(int amount);
+}
+
+public class ProductsList{
+	private int choice;
+	private int amount = 0;
+	public static int cash = 0;
+	int result;
+	File file;
+	FileReader fr;
+	BufferedReader br;
+	Scanner sc = new Scanner(System.in);
+
+	public ProductsList(int choice) {
+		this.choice = choice;
+		displayProducts();
+	}
+
+	public void displayProducts() {
+		try{
+			if (choice == 1) {
+				file = new File("L'Oreal Paris.txt");
+			}
+			else if(choice == 2) {
+				file = new File("MaybellineProducts.txt");
+			}
+			else if(choice == 3) {
+				file = new File("Lakme Cosmetics.txt");
+			}
+			readFile(file);
+		}
+		finally{
+			selection(file);
+		}
+	}
+	
+	public void readFile(File file) {
+		try {
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			String line;
+			System.out.println("\nProducts available: \n");
+			while ((line = br.readLine()) != null) {
+				System.out.println(line);
+			}
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			try {
+				if (br != null) {
+					br.close();
+				}
+				if (fr != null) {
+					fr.close();
+				}
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void selection(File current_file){
+		String x;
+		System.out.println("\nSelect the items you want to buy: ");
+		System.out.println("Enter '1' for first item\nEnter '2' for second item\nEnter '3' for third item\nEnter '4' for changing the brand.\nType 'exit' for stopping the order.\n");
+		try{
+			while (!(x = sc.next()).equals("exit")) {
+				if(x.equals("1") || x.equals("2") || x.equals("3")){
+					int limit = Integer.parseInt(x);
+					System.out.println("Enter the number of products: ");
+					int quantity = sc.nextInt();			
+					amount = price(current_file, limit, quantity);
+					result = bill(amount);
+				}
+				else if(x.equals("4")){
+					Cosmeto brand_change = new Cosmeto();
+					brand_change.brandSelection(3);
+					System.exit(0);
+				}
+				else {
+                				System.out.println("Invalid option. Please enter a valid choice.");
+           	 		}
+				System.out.println("\nWant to buy more??? :-) \nEnter your brand choice\nElse type exit :(");
+			}
+		}
+		finally{
+			System.out.println("\nTotal bill is " +result);
+			//receipt(result);
+		}
+	}
+
+
+	public int price(File current_file, int limit, int quantity){
+		int cost = 0;
+		try {
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			String line, numericpart; //alphapart;
+			int i = 1;
+			while ((line = br.readLine()) != null && i <= limit) {
+				//alphapart = line.replaceAll("[^a-zA-Z]", "");
+				numericpart = line.replaceAll("[^0-9]", "");
+				cost = Integer.parseInt(numericpart);
+				i++;
+			}	
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			try {
+				if (br != null) {
+					br.close();
+				}
+				if (fr != null) {
+					fr.close();
+				}
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			return cost * quantity;
+		}
+	}
+	
+	public static int bill(int amount){
+		cash = cash + amount;
+		return cash;
+	}
+}
